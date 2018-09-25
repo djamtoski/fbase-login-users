@@ -1,13 +1,22 @@
 <template>
-    <h1>Users</h1>
+    <div class="user-list">
+        <h1>Users</h1>
+        <div class="list">
+            <user-card
+            v-for="(user,index) in users" :key="index" :user="user">
+
+            </user-card>
+        </div>
+    </div>
 </template>
 
 <script>
-import RequestService from './request-services';
+import UsersModel from '../models/Usersmodel';
+import dataService from './data-service';
+import userCard from './user-card';
 export default {
 data(){
     return {
-        reqService : null,
         users : [],
     }
 },
@@ -15,21 +24,14 @@ methods : {
 
 },
 components : {
-    
+    userCard
 },
 created() {
-    this.reqService = new RequestService({
-        baseUrl : '/https://sedcohrid.firebaseio.com/api/',
-    })
-    // axios.get('https://sedcohrid.firebaseio.com/api/students.json')
-    // .then(response => {
-    //     console.log(response.data);
-    // })
-    this.reqService.execute('https://sedcohrid.firebaseio.com/api/students.json')
-    .then(response => {
+    dataService.get('students.json')
+    .then((response) =>{
         this.users = response.data;
-        
-    })
+        console.log(this.users);
+    }) 
 }
 }
 </script>

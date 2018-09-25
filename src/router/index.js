@@ -43,7 +43,7 @@ export default new Router({
             beforeEnter : (to,from,next) => {
                 const token = localStorage.getItem("token");
                 if(token != null){
-                    next(false);
+                    next('/',false);
                 }
                 else {
                     next();

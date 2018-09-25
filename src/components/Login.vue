@@ -1,4 +1,5 @@
 <template>
+<div>
     <form class="col-md-3 center-element">
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
@@ -24,68 +25,56 @@
             class="btn btn-primary" 
             @click.prevent="login">Submit</button>
     </form>
+    <div class="alert alert-warning col-lg-8">
+  {{ error | convertError }}
+</div>
+    </div>
 </template>
 
 <script>
+import loginService from './login-service';
 export default {
   data() {
     return {
-      email: "",
-      password: ""
+      email: '',
+      password: '',
+      error : ''
     };
   },
   methods: {
     login() {
-      const url =
-        "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyCw-lZIhvFfrU2Y2GBbZr2kXO1BmVstvHM";
-      const data = {
-        email: this.email,
-        password: this.password,
-        returnSecureToken: true
-      };
-
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json; charset=utf-8"
-        }
+      loginService.post('',{
+        email : this.email,
+        password : this.password,
+        returnSecureToken : true
       })
-        .then(response => {
-          return response.json();
-        })
-        .then(data => {
-          //   const now = new Date();
-          //   console.log(now);
-          //   const year = now.getFullYear();
-          //   const month = now.getMonth() + 1;
-          //   const day = now.getDate();
-          //   const h = now.getHours();
-          //   const m = now.getMinutes();
-          //   const s = now.getSeconds();
-          //   if (h < 10) {
-          //       h = "0" + h;
-          //   }
-          //   const expiresInString = `${year}-${month}-${day}T${h+1}:${m}:${s}`;
-          //   console.log(expiresInString);
-
-          //   const expiresIn = new Date(expiresInString);
-          //   console.log(JSON.stringify(expiresIn));
-          const now = new Date().getTime();
-          const expiresInMiliseconds =
-            Number.parseInt(data.expiresIn, 10) * 1000;
-          const expiresAtDate = new Date(now + expiresInMiliseconds);
-          console.log(expiresAtDate);
-          localStorage.setItem("token", data.idToken);
-          localStorage.setItem("expiresAt", expiresAtDate);
-
-          this.$router.replace("/");
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      .then(data => {
+        const now = new Date().getTime();
+        const expiresInMiliseconds = Number.parseInt(data.expiresIn, 10) * 1000;
+        const expiresatDate = new Date(now + expiresInMiliseconds);
+        localStorage.setItem('token',data.idToken);
+        localStorage.setItem('expiresAt', expiresatDate);
+        this.$router.replace('/');
+      })
+      .catch((error) =>{
+        this.error = error.response.data.error.message;
+      })
+      
     }
-  }
+  },
+  components : {
+    loginService
+  },
+  filters : {
+    convertError(val){
+      var convertedstring = val.toLowerCase().replace('_',' ').split(' ');
+      for (var i = 0; i< convertedstring.length ; i++ ){
+        convertedstring[i] = convertedstring[i].charAt(0).toUpperCase() +
+        convertedstring[i].substring(1);
+      }
+      return convertedstring.join(' ');
+    }
+  },
 };
 </script>
 

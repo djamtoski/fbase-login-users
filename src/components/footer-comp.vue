@@ -1,12 +1,16 @@
 <template>
-    <div class="footer">
+    <div  class="footer">
         &copy; 2018 Copyright: <span>Vuejs Course Github</span>
     </div>
 </template>
 
 <script>
 export default {
-
+    data(){
+        return {
+            
+        }
+    },
 }
 </script>
 

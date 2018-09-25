@@ -4,7 +4,7 @@
   <li><router-link to="/">Home</router-link></li>
   <li><router-link to="/users">Users</router-link></li>
   <li><router-link to="/">Comments</router-link></li>
-  <div v-if="loggedIn">
+  <div>
   <li @click="logOut"><router-link to="/">Log Out</router-link></li>
   </div>
 </ul>
